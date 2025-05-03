@@ -189,6 +189,60 @@ Head to your RDS console - search for rds in search bar at the top of the screen
 - Select Edit inbound rules to add a new rule with the following details:
   Type: All Traffic , Source: Custom, then 0.0.0.0/0 in the next box
 
+![image](https://github.com/user-attachments/assets/359d2435-6c66-4c0c-a32e-1aa162ff7858)
+- Select Save rules
+- Navigate to QuickSight by searching Amazon QuickSight in the search bar at the top of your AWS console.
+- If this is your first time using QuickSight, follow the sign-up flow;
+- PLEASE make sure to untick the offer to upgrade with the optional add-on Add Paginated Reports. No getting charged 
+   today!
+- Make sure you select the same Region as the one you've been doing this project in.
+
+![image](https://github.com/user-attachments/assets/0d1733a6-5ace-4a81-a7d3-de1119e8178a)
+
+![image](https://github.com/user-attachments/assets/d12f324b-0b09-47b3-8789-e081d32f9ec5)
+- Once you're in QuickSight, select Datasets from the left menu.
+- In the top right of the screen, select New dataset
+- select RDS
+- Fill out the following values:
+- Data source name: RDS_Public_Database
+- Instance ID: select your database from the drop-down
+- Connection type: Public network
+- Database name: QuickSightDatabase
+- Username: admin (or the username you created when you set up your RDS instance)
+- Password: enter in your RDS instance password
+- Select Validate connection
+
+
+  ![image](https://github.com/user-attachments/assets/f3dc1c57-6a88-4917-b423-7d1ce41180ba)
+
+
+
+![image](https://github.com/user-attachments/assets/0ef5c7e8-098c-4ffb-b81d-8a79c01d5ba7)
+
+
+# Secure QuickSight :
+
+We can put QuickSight in a Security Group and our RDS in a Security Group, then let our RDS Security accept requests from the QuickSight security group only.
+![image](https://github.com/user-attachments/assets/ba66e4dd-c618-44b1-98e9-d7610c9b5b55)
+
+# Create security group for QuickSight
+- Select Create security group
+- For Security group name enter QuickSight_SecGp
+- For Description enter Security Group that contains QuickSight
+- Select the default VPC as your VPC option. We haven't created our own VPC so the default one is what our RDS and 
+  QuickSight will be living in.
+
+![image](https://github.com/user-attachments/assets/39c0166c-4cbc-4c16-9542-1ebdf51a82c1)
+
+- Leave the inbound and outbound rules as they are.
+- Select Create security group
+- Take note of your new QuickSight_SecGp ID; take a screenshot or copy and paste it somewhere safe. You'll need it 
+  so we can attach our new security group to QuickSight!
+![image](https://github.com/user-attachments/assets/a8552121-89e8-4772-8aac-000113ef9fa3)
+  NOW , We have an empty QuickSight Security Group living inside the same VPC as our RDS instance.
+
+![image](https://github.com/user-attachments/assets/00ce99d3-8fd8-4aad-90eb-92e42953c46c)
+
 
 
 
