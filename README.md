@@ -104,3 +104,92 @@ Head to your RDS console - search for rds in search bar at the top of the screen
 - You should get a pop-up that say's Successfully made the MySQL connection. 
 ![image](https://github.com/user-attachments/assets/2ddb1cd6-bf58-4404-840b-e66064ad58e3)
 
+# Create Database Tables and Load Data:
+- Create a new schema using MySQL Workbench
+- Create two new tables in your schema
+- Populate those tables with data using SQL
+
+- Select Schemas as the tab in the top left, next to Administration.
+- Right click on the blank space under the Schemas menu.
+- Select Create Schema.
+![image](https://github.com/user-attachments/assets/c97ef873-b22e-45b9-962f-e3d9c9bccb52)
+- Name your schema QuickSightDatabase
+- Leave everything else as is, and select Apply.
+# In your new Query script, copy and paste the following SQL query:
+    CREATE TABLE newhire(
+    empno INT PRIMARY KEY,
+    ename VARCHAR(10),
+    job VARCHAR(9),
+    manager INT NULL,
+    hiredate DATETIME,
+    salary NUMERIC(7,2),
+    comm NUMERIC(7,2) NULL,
+    department INT)
+
+![image](https://github.com/user-attachments/assets/b4f2f5cb-8c9e-4079-b0d0-826dcc1dfbb1)
+
+- Run your Query script by selecting the lightning button above your script.
+
+- To see the results from our query, delete the current query and replace it with the following:
+
+        SELECT * FROM newhire;
+![image](https://github.com/user-attachments/assets/744869e3-694f-4b19-9420-7761d0a22afa)
+- Now let's populate our new table by running another query.
+- Delete the current contents of your query script and paste in the following
+
+      INSERT INTO newhire (empno, ename, job, manager, hiredate, salary, comm, department) VALUES
+      (1, 'JOHNSON', 'ADMIN', 6, '1990-12-17', 18000, NULL, 4),
+      (2, 'HARDING', 'MANAGER', 9, '1998-02-02', 52000, 300, 3),
+      (3, 'TAFT', 'SALES I', 2, '1996-01-02', 25000, 500, 3),
+      (4, 'HOOVER', 'SALES I', 2, '1990-04-02', 27000, NULL, 3),
+      (5, 'LINCOLN', 'TECH', 6, '1994-06-23', 22500, 1400, 4),
+      (6, 'GARFIELD', 'MANAGER', 9, '1993-05-01', 54000, NULL, 4),
+      (7, 'POLK', 'TECH', 6, '1997-09-22', 25000, NULL, 4),
+      (8, 'GRANT', 'ENGINEER', 10, '1997-03-30', 32000, NULL, 2),
+      (9, 'JACKSON', 'CEO', NULL, '1990-01-01', 75000, NULL, 4),
+      (10, 'FILLMORE', 'MANAGER', 9, '1994-08-09', 56000, NULL, 2),
+      (11, 'ADAMS', 'ENGINEER', 10, '1996-03-15', 34000, NULL, 2),
+      (12, 'WASHINGTON', 'ADMIN', 6, '1998-04-16', 18000, NULL, 4),
+      (13, 'MONROE', 'ENGINEER', 10, '2000-12-03', 30000, NULL, 2),
+      (14, 'ROOSEVELT', 'CPA', 9, '1995-10-12', 35000, NULL, 1);
+
+- To see the results from our query, delete the current query and replace it with the following:
+
+        SELECT * FROM newhire;
+
+![image](https://github.com/user-attachments/assets/89d341ca-ea20-41e7-acbe-a3460812852d)
+
+# Remove the current query and run the following to create and populate a second table:
+
+      CREATE TABLE department(
+      deptno INT NOT NULL,
+      dname VARCHAR(14),
+      loc VARCHAR(13));
+
+     INSERT INTO department (deptno, dname, loc) VALUES 
+     (1, 'ACCOUNTING', 'ST LOUIS'),
+     (2, 'RESEARCH', 'NEW YORK'),
+     (3, 'SALES', 'ATLANTA'),
+     (4, 'OPERATIONS', 'SEATTLE');
+
+- To see the results from our query, delete the current query and replace it with the following:
+
+        SELECT * FROM department;
+![image](https://github.com/user-attachments/assets/b0222a5d-f9bf-4364-86ef-862ae3437b00)
+
+
+# Connect RDS to QuickSight
+- Adjust the security group attached to our RDS instance to allow inbound requests from QuickSight.
+- Add your RDS instance as a data source in QuickSight.
+
+- Navigate back into your RDS instance from the RDS console in AWS.
+- Open your RDS instance.
+- Under Connectivity & security, select the link in VPC security groups to open the related security group.
+- Open the security group by selecting the Security group ID
+- Select Edit inbound rules to add a new rule with the following details:
+  Type: All Traffic , Source: Custom, then 0.0.0.0/0 in the next box
+
+
+
+
+
