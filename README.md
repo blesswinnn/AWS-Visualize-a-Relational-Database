@@ -395,4 +395,18 @@ We've created our own RDS security group, added inbound rules to allow QuickSigh
 ![image](https://github.com/user-attachments/assets/33c95b95-8b5c-41d9-b254-d902f18d2d3d)
 
 # DELETE RESOURCES
+![image](https://github.com/user-attachments/assets/291817cf-d728-4ddb-b773-004f49abb85b)
+![image](https://github.com/user-attachments/assets/175794bd-2f56-479f-b98c-54a6a1fde449)
+![image](https://github.com/user-attachments/assets/fe69c678-a079-477c-b5b7-b75a4986a6d0)
+![image](https://github.com/user-attachments/assets/7ad4b8d9-192c-487d-a0dd-2be4a0def6ba)
+![image](https://github.com/user-attachments/assets/41be34c0-f3a0-4f34-a7a2-dc35c34d8825)
+![image](https://github.com/user-attachments/assets/79085e4f-fb95-4115-91ac-cd421d9aa52b)
+![image](https://github.com/user-attachments/assets/b0a47918-3aef-4993-90ef-88b37c679a5a)
+![image](https://github.com/user-attachments/assets/42b7d48a-ea3c-4337-9b94-c1aebbcccf73)
+
+
+
+
+
+
 
