@@ -243,7 +243,156 @@ We can put QuickSight in a Security Group and our RDS in a Security Group, then 
 
 ![image](https://github.com/user-attachments/assets/00ce99d3-8fd8-4aad-90eb-92e42953c46c)
 
+# Attach Security Group to QuickSight
+- Navigate to QuickSight using the search bar.
+- Select the profile icon in the top right and select Manage QuickSight from the dropdown.
+- Select Manage VPC connections
+- Select the Add VPC connection button
+- For VPC connection name, enter RDS_VPC
+- Select the VPC from the dropdown that matches the one you added to your QuickSight security group. If you only see 
+  one VPC in the dropdown, that'll be it!
+- For Execution role, select aws-quicksight-service-role-v0.
+- Select the default dropdown options for the Subnet ID fields
+- For Security Group IDs select the same ID as your QuickSight_SecGp which you saved earlier.
+![image](https://github.com/user-attachments/assets/d620ed14-ceb2-48f8-b533-91302cf14009)
+![image](https://github.com/user-attachments/assets/63b2fa1c-845f-4815-9d6b-615397dbaead)
+ # this ERROR WILL OCCUR BCOZ OUR ROLE ASSIGNED HAS NO VPC PERMISSIONS
+ ![image](https://github.com/user-attachments/assets/90f65e8c-3b93-47ac-af1a-5f61d239de48)
+# NAVIGATE TO IAM AND CHANGE ROLE AND ADD VPC ACCESS POLICY:
+![image](https://github.com/user-attachments/assets/176030f1-bc2d-4668-8e5f-a6b75fad53fc)
+
+- Click into the aws-quicksight-service-role-v0
+- In the Permissions policies section, select Add permissions
+- From the dropdown, select Create inline policy
+- Select the JSON option as a policy editor
+- Paste in the following IAM policy:
+
+      {
+       "Version": "2012-10-17",
+       "Statement": [
+       {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeVpcs",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeNetworkInterfaces",
+        "ec2:CreateNetworkInterface",
+        "ec2:DeleteNetworkInterface",
+        "ec2:ModifyNetworkInterfaceAttribute",
+        "iam:PassRole"
+      ],
+      "Resource": "*"
+      },
+      {
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Resource": "*"
+        }
+       ]
+      }
+
+- Select Next
+- For Policy name, enter QuickSightAllowVPC
+- Select Create policy
+![image](https://github.com/user-attachments/assets/a98034f4-96d0-49ae-8dda-0dc27981b0a3)
+
+- Return to your QuickSight VPC connection.
+- Select Add one more time.
+
+  ![image](https://github.com/user-attachments/assets/8c7e23e4-fd9c-4c59-a053-213da99a83ca)
+
+# Secure RDS 
+
+- Make our RDS instance private instead of publicly accessible.
+- Create a new security group specially for our RDS instance.
+- Give our QuickSight security group access to our RDS securtiy group so they can talk to each other.
+
+****Make your Database Not Publicly Accessible
+
+- The database no longer needs to be publicly accessible; that's way too sketchy. We're going to do a much better 
+   job with security groups.
+- Open the Amazon RDS console, in the left-hand navigation, select Databases.
+- Then, choose QuickSightDatabase
+- On the QuickSightDatabase page, choose Modify.
+- On the ModifyDB instance: QuickSightDatabase page, in the Connectivity section, choose Additional Configuration.
+- Select Not publicly accessible, and choose Continue.
+- Select Apply immediately.
+- Select Modify DB instance.
+![image](https://github.com/user-attachments/assets/e6907155-002e-4215-85a6-95530cd8e24f)
+
+****Create a security group for RDS
+
+- Search for security groups in the search bar in your AWS console
+- Select Create security group
+- For Security group name enter RDS_SecGp
+- For Description enter Security Group that contains RDS
+- Select the default VPC as your VPC option. Our RDS security group will live in the same VPC as our QuickSight 
+   security group.
+![image](https://github.com/user-attachments/assets/30d66f68-84e5-481e-8e16-e7d3b250bb82)
+
+****Add inbound rules to allow QuickSight to query our RDS instance;
+
+- Under Inbound rules, select Add rule
+- For Type select MYSQL/Aurora
+- For Source select Custom and then search for the security group ID of your QuickSight_SecGp
+![image](https://github.com/user-attachments/assets/37bb84c3-21d2-40f5-ac5a-f02c8e49ecc2)
 
 
+# Now let's attach it to our RDS instance.
+- Return to your RDS instance and select Modify
+- Under the Connectivity section, look for Security group
+- Select your newly created RDS_SecGp and remove any existing one.
+![image](https://github.com/user-attachments/assets/a6748b20-f3a5-4abc-aa52-a456606fbd8b)
+- Select Continue
+- Select Apply immediately
+- Select Modify DB instance
+We've created our own RDS security group, added inbound rules to allow QuickSight in, and attached it to our RDS instance.
+![image](https://github.com/user-attachments/assets/a83be472-0efa-4af3-99a6-0062e5edb0b2)
 
+# Reconnect RDS with QuickSight
+- Create a dataset in QuickSight to connect with our new security group
+- Choose the table we want to query to create our charts
+- Return to the QuickSight console (you may need to click the QuickSight logo in the top left to leave the 
+  QuickSight VPC settings).
+  ![image](https://github.com/user-attachments/assets/52f9fd47-f145-4faa-b204-e4905e2f7204)
+
+- Select Datasets
+- Select New dataset
+- Select RDS
+- Fill out the following values:
+- Data source name: RDS_VPC_Database
+- Instance ID: select your database from the drop-down
+- Connection type: RDS_VPC (not 'Public network' - yay!)
+- Database name: QuickSightDatabase
+- Username: admin (or the username you created when you set up your RDS instance)
+- Password: enter in your RDS instance password
+- Select Validate connection
+
+![image](https://github.com/user-attachments/assets/b17e00fb-e237-4a95-8dba-e995649ed30e)
+
+- Select Create data source
+- Select newhire as the table to visualize.
+- Click Select
+- Select Directly query your data and then Visualize.
+![image](https://github.com/user-attachments/assets/b23f0471-412c-420e-a231-e97cb61c933b)
+
+# Make some charts 
+- Cancel any pop-up that shows and select the Vertical Bar Chart from the left hand Visuals section.
+- Drag jobs into the x-axis.
+- Drag salary into the Value measure.
+
+![image](https://github.com/user-attachments/assets/51096544-bac5-400e-80c9-e47ebf930735)
+
+- Continue adding any other charts you feel like!
+- When you're ready, select Publish in the top right
+- Name your dashboard RDS New Hire Data
+- Select Publish Dashboard
+
+# DASHBOARD CREATED 
+![image](https://github.com/user-attachments/assets/33c95b95-8b5c-41d9-b254-d902f18d2d3d)
+
+# DELETE RESOURCES
 
